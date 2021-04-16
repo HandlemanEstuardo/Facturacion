@@ -1,0 +1,134 @@
+﻿@model FacturaMVC.Models.ViewModel.VentaViewModel
+@{
+    ViewBag.Title = "Maestro Detalle";
+}
+
+<h2>@ViewBag.Title</h2>
+<div style="color:aqua">
+    @ViewBag.Message
+
+</div>
+
+@using (Html.BeginForm("Agregar", "MaestroDetalle", FormMethod.Post))
+{
+<div class="row">
+    <h4>Dastos del Cliente</h4>
+    <hr />
+    <a class="btn btn-primary" href="~/MaestroDetalle/ListadoCliente">Mostrar Listdo de Clientes</a>
+    <a class="btn btn-primary" href="~/MaestroDetalle/ListadoFactura">Mostrar Listdo de Facturas</a>
+    <hr />
+
+    <div class="form-group">
+        @Html.LabelFor(d => d.nombre)
+        @Html.TextBoxFor(d => d.nombre)
+        @Html.LabelFor(d => d.nit)
+        @Html.TextBoxFor(d => d.nit)
+
+        @Html.LabelFor(d => d.fecha)
+        @Html.EditorFor(d => d.fecha, "", new { @class = "form-control" })
+        @Html.ValidationMessageFor(d => d.fecha, null, new { @class = "red" })
+    </div>
+</div>
+        <hr />
+
+        <div class="row">
+            <h4>Datos de Producto</h4>
+            <div class="form-group">
+                Cantidad
+                <input type="text" id="Cantidad" />
+                Nombre del Producto
+                <input type="text" id="Nombre" />
+                Precio
+                <input type="number" id="Precio" />
+                <input class="btn btn-primary" value="Agregar" type="button" onclick="AgregarConcepto(); return false;" />
+            </div>
+            <hr/>
+            <div id="divConceptos">
+                <table id="tablaConceptos" style="width:100%;">
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Nombre del Producto</th>
+                        <th>Precio Unitario</th>
+                        <th>Total</th>
+                    </tr>
+
+                </table>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" />
+        </div>
+    </div>
+}
+    <script>
+        var num = 0;
+        function AgregarConcepto() {
+
+
+            let Cantidad = document.getElementById("Cantidad").value;
+            let Precio = document.getElementById("Precio").value;
+            let Nombre = document.getElementById("Nombre").value;
+            
+
+            let Tabla = document.getElementById("tablaConceptos");
+            let TR = document.createElement("tr");
+
+
+            let TDCantidad = document.createElement("td");
+            let TDNombre = document.createElement("td");
+            let TDPrecio = document.createElement("td");
+            let TDTotal = document.createElement("td");
+
+            
+
+            TR.appendChild(TDCantidad);
+            TR.appendChild(TDNombre);
+            TR.appendChild(TDPrecio);
+            TR.appendChild(TDTotal);
+
+            TDCantidad.innerHTML = Cantidad;
+            TDNombre.innerHTML = Nombre;
+            TDPrecio.innerHTML = Precio;
+            TDTotal.innerHTML = parseFloat(Cantidad)*parseFloat(Precio);
+
+            Tabla.appendChild(TR);
+
+            //agregamos hiddens
+
+            let DivDetalle = document.getElementById("divConceptos");
+            let HiddenIndex = document.createElement("input");
+            let HiddenCantidad = document.createElement("input");
+            let HiddenNombre = document.createElement("input");
+            let HiddenPrecio = document.createElement("input");
+            
+
+
+            HiddenIndex.name = "detalle.Index";
+            HiddenIndex.value = num;
+            HiddenIndex.type = "hidden";
+
+            HiddenCantidad.name = "detalle[" + num + "].cantidad";
+            HiddenCantidad.value = Cantidad;
+            HiddenCantidad.type = "hidden";
+
+            HiddenNombre.name = "detalle[" + num + "].nombre";
+            HiddenNombre.value = Nombre;
+            HiddenNombre.type = "hidden";
+
+            HiddenPrecio.name = "detalle[" + num + "].precioUnitario";
+            HiddenPrecio.value = Precio;
+            HiddenPrecio.type = "hidden";
+
+            DivDetalle.appendChild(HiddenIndex);
+            DivDetalle.appendChild(HiddenCantidad);
+            DivDetalle.appendChild(HiddenNombre);
+            DivDetalle.appendChild(HiddenPrecio);
+            
+            document.getElementById("Cantidad").value = "";
+            document.getElementById("Precio").value = "";
+            document.getElementById("Nombre").value = "";
+            
+
+            num++;
+        }
+    </script>
